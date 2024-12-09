@@ -2,42 +2,77 @@ using UnityEngine;
 
 public class TowerSpawner : MonoBehaviour
 {
-    //[SerializeField]
-    //private GameObject towerPrefab; // Prefab wie¿y
     private GameObject pendingTower; // Tymczasowa wie¿a w trakcie ustawiania
     private Camera mainCamera; // Kamera do raycastów
+    [SerializeField] private GridManager gridManager; // Referencja do mened¿era siatki
 
     private void Start()
     {
         mainCamera = Camera.main;
+
+        if (gridManager == null)
+        {
+            Debug.LogError("GridManager not assigned! Please attach it in the inspector.");
+        }
     }
 
     public void StartPlacingTower(GameObject towerPrefab)
     {
-        // Jeœli nie ma ju¿ oczekuj¹cej wie¿y, tworzona jest nowa
+        // Tworzymy now¹ wie¿ê tylko jeœli ¿adna nie jest ju¿ ustawiana
         if (pendingTower == null)
         {
-            pendingTower = Instantiate(towerPrefab); // Tworzymy now¹ wie¿ê
-            pendingTower.SetActive(true); // Upewniamy siê, ¿e wie¿a jest widoczna
+            pendingTower = Instantiate(towerPrefab);
+            pendingTower.SetActive(false); // Tymczasowa wie¿a jest niewidoczna, dopóki nie znajdzie miejsca
         }
     }
 
     public void UpdatePlacement()
     {
-        if (pendingTower == null) return;
+        if (pendingTower == null || gridManager == null) return;
 
-        // Przesuwanie wie¿y na podstawie pozycji myszy
+        // Raycast w celu okreœlenia pozycji myszy w œwiecie
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit))
+        if (Physics.Raycast(ray, out RaycastHit raycastHit))
         {
-            pendingTower.transform.position = new Vector3(hit.point.x, 0.5f, hit.point.z); // Wie¿a pod¹¿a za kursorem myszy
+            Vector2Int gridPosition = gridManager.GetGridCoordinates(raycastHit.point);
+
+            // Sprawdzanie, czy komórka jest dostêpna
+            if (gridManager.IsCellAvailable(gridPosition.x, gridPosition.y))
+            {
+                Vector3 worldPosition = gridManager.GetWorldPosition(gridPosition.x, gridPosition.y);
+                pendingTower.transform.position = new Vector3(worldPosition.x, 0.5f, worldPosition.z);
+                pendingTower.SetActive(true); // Wie¿a staje siê widoczna
+            }
+            else
+            {
+                pendingTower.SetActive(false); // Ukryj wie¿ê, jeœli nie ma miejsca
+            }
         }
 
-        // Zatwierdzenie ustawienia wie¿y
-        if (Input.GetMouseButtonDown(1)) // Prawy przycisk myszy
+        // Zatwierdzenie ustawienia wie¿y po klikniêciu prawym przyciskiem myszy
+        if (Input.GetMouseButtonDown(1))
         {
-            // Ustalamy miejsce postawienia wie¿y
-            pendingTower = null; // Koñczymy tryb ustawiania, mo¿emy stawiaæ kolejn¹ wie¿ê
+            PlaceTower();
+        }
+    }
+
+    private void PlaceTower()
+    {
+        if (pendingTower == null || gridManager == null) return;
+
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit raycastHit))
+        {
+            Vector2Int gridPosition = gridManager.GetGridCoordinates(raycastHit.point);
+            if (gridManager.IsCellAvailable(gridPosition.x, gridPosition.y))
+            {
+                gridManager.PlaceTower(gridPosition.x, gridPosition.y); // Oznacz komórkê jako zajêt¹
+                pendingTower = null; // Koñczymy tryb ustawiania
+            }
+            else
+            {
+                Debug.LogWarning("Cannot place tower here.");
+            }
         }
     }
 }

@@ -1195,6 +1195,53 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
+--- !u!1 &179198867
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 179198869}
+  - component: {fileID: 179198868}
+  m_Layer: 0
+  m_Name: GridManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &179198868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 179198867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d8aae8559899394db86f96d8f303044, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridWidth: 100
+  gridHeight: 100
+  cellSize: 1
+--- !u!4 &179198869
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 179198867}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 6.2754107, y: -2.0492723, z: 8.352199}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!43 &204033777
 Mesh:
   m_ObjectHideFlags: 0
@@ -9673,7 +9720,10 @@ MonoBehaviour:
   camera: {fileID: 963194227}
   target: {fileID: 831332474}
   barricade: {fileID: 4730338334956361415, guid: 7ef45a2c14561a74d831e4d33d740843, type: 3}
-  tower: {fileID: 3795019313203682884, guid: d29c05d6b5cfb8647b8dd7778b8c9b04, type: 3}
+  towerFire: {fileID: 3795019313203682884, guid: d29c05d6b5cfb8647b8dd7778b8c9b04, type: 3}
+  towerWater: {fileID: 3795019313203682884, guid: be562ca4872ae5e499e016804502be80, type: 3}
+  towerEarth: {fileID: 3795019313203682884, guid: a7ac2157b64511c44878b2bc9c39b6c1, type: 3}
+  towerWind: {fileID: 3795019313203682884, guid: e0689bcf5555637439370109917841c9, type: 3}
   towerSpawner: {fileID: 1975285525}
   enemySpawner: {fileID: 372781995}
 --- !u!4 &1781470667
@@ -10979,6 +11029,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 948be0bb040326f499e99eb1c507abae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gridManager: {fileID: 179198868}
 --- !u!4 &1975285526
 Transform:
   m_ObjectHideFlags: 0
@@ -12829,3 +12880,4 @@ SceneRoots:
   - {fileID: 1206597963}
   - {fileID: 1975285526}
   - {fileID: 372781996}
+  - {fileID: 179198869}

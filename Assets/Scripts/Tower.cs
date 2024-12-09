@@ -3,18 +3,31 @@ using UnityEngine;
 public class Tower : MonoBehaviour
 {
     [SerializeField]
-    private float attackRange = 10f; // Zasięg ataku
-    [SerializeField]
-    private float attackCooldown = 1f; // Czas między strzałami
+    private TowerType towerType;
     [SerializeField]
     private GameObject bulletPrefab; // Prefab kuli (pocisku)
+    private float attackRange; // Zasięg ataku
+    private float attackCooldown; // Czas między strzałami
     [SerializeField]
     private LayerMask enemyLayer; // Warstwa, w której znajdują się przeciwnicy
-    [SerializeField]
     private float towerHeight = 2f; // Wysokość wieży, w zależności od jej rozmiaru
+    private float bulletForce;
+
+
 
     private float timeSinceLastAttack = 0f; // Czas od ostatniego ataku
 
+    private void Start()
+    {
+        SetType();
+    }
+    private enum TowerType
+    {
+        earth,
+        fire,
+        water,
+        wind
+    }
     private void Update()
     {
         timeSinceLastAttack += Time.deltaTime;
@@ -52,6 +65,33 @@ public class Tower : MonoBehaviour
         bulletRb.linearVelocity = direction * 10f; // Prędkość pocisku
 
         // Opcjonalnie: dodanie siły, by pocisk mógł "uderzyć" w cel
-        bulletRb.AddForce(direction * 10f, ForceMode.Impulse);
+        bulletRb.AddForce(direction * bulletForce, ForceMode.Impulse);
+    }
+
+    private void SetType()
+    {
+        switch (towerType)
+        {
+            case TowerType.earth:
+                attackRange = 5f;
+                attackCooldown = 5f;
+                bulletForce = 30f;
+                break;
+            case TowerType.fire:
+                attackRange = 5f;
+                attackCooldown = 1f;
+                bulletForce = 10f;
+                break;
+            case TowerType.water:
+                attackRange = 5f;
+                attackCooldown = 1f;
+                bulletForce = 10f;
+                break;
+            case TowerType.wind:
+                attackRange = 10f;
+                attackCooldown = 4f;
+                bulletForce = 35f;
+                break;
+        }
     }
 }

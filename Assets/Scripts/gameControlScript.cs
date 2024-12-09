@@ -3,20 +3,15 @@ using UnityEngine.SceneManagement;
 
 public class gameControlScript : MonoBehaviour
 {
-    [SerializeField]
-    private Camera camera;
-    [SerializeField]
-    private GameObject target;
-    [SerializeField]
-    private GameObject barricade;
-    [SerializeField]
-    private GameObject tower;
-    [SerializeField]
-    private TowerSpawner towerSpawner; // Odwo³anie do TowerSpawner
-    [SerializeField]
-    private EnemySpawner enemySpawner; // Referencja do spawnera
-
-    private RaycastHit[] hits = new RaycastHit[1];
+    [SerializeField] private Camera camera;
+    [SerializeField] private GameObject target;
+    [SerializeField] private GameObject barricade;
+    [SerializeField] private GameObject towerFire;
+    [SerializeField] private GameObject towerWater;
+    [SerializeField] private GameObject towerEarth;
+    [SerializeField] private GameObject towerWind;
+    [SerializeField] private TowerSpawner towerSpawner; // Odwo³anie do TowerSpawner
+    [SerializeField] private EnemySpawner enemySpawner; // Referencja do spawnera
 
     void Update()
     {
@@ -24,39 +19,42 @@ public class gameControlScript : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.Mouse0))
         {
             Ray ray = camera.ScreenPointToRay(Input.mousePosition);
-
-            if (Physics.RaycastNonAlloc(ray, hits) > 0)
+            if (Physics.Raycast(ray, out RaycastHit hit))
             {
-                target.transform.position = new Vector3(hits[0].point.x, 1, hits[0].point.z);
+                target.transform.position = new Vector3(hit.point.x, 1, hit.point.z);
             }
         }
 
-        // Rozpoczêcie stawiania wie¿y
-        if (Input.GetKeyDown(KeyCode.Alpha2)) // Mo¿esz wybraæ dowolny przycisk
+        // Rozpoczêcie stawiania ró¿nych typów wie¿
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            Ray ray = camera.ScreenPointToRay(Input.mousePosition);
-
-            if (Physics.RaycastNonAlloc(ray, hits) > 0)
-            {
-                towerSpawner.StartPlacingTower(tower); // Rozpoczynamy stawianie wie¿y
-            }
+            towerSpawner.StartPlacingTower(towerFire);
         }
-
-        // Postawienie przeszkody
-        if (Input.GetKeyUp(KeyCode.Alpha1))
+        if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            Ray ray = camera.ScreenPointToRay(Input.mousePosition);
-
-            if (Physics.RaycastNonAlloc(ray, hits) > 0)
-            {
-                towerSpawner.StartPlacingTower(barricade); // rozpoczecie stawiania barykady
-            }
+            towerSpawner.StartPlacingTower(towerWater);
         }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            towerSpawner.StartPlacingTower(towerEarth);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            towerSpawner.StartPlacingTower(towerWind);
+        }
+        // Rozpoczêcie stawiania barykady
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            towerSpawner.StartPlacingTower(barricade);
+        }
+
+        // Aktualizacja lokalizacji wie¿y
+        towerSpawner.UpdatePlacement();
 
         // Spawnowanie wrogów
         if (Input.GetKeyUp(KeyCode.S))
         {
-            enemySpawner.SpawnEnemy(); // U¿yjemy metody z EnemySpawner do spawnowania wrogów
+            enemySpawner.SpawnEnemy();
         }
 
         // Restart
@@ -64,8 +62,5 @@ public class gameControlScript : MonoBehaviour
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
-
-        // Zaktualizowanie lokalizacji wie¿y, jeœli jest w trybie ustawiania
-        towerSpawner.UpdatePlacement();
     }
 }
