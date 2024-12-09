@@ -423,9 +423,12 @@
 -analyzer:"C:/Program Files/Unity/Hub/Editor/6000.0.28f1/Editor/Data/Tools/Unity.SourceGenerators/Unity.Properties.SourceGenerator.dll"
 -analyzer:"C:/Program Files/Unity/Hub/Editor/6000.0.28f1/Editor/Data/Tools/Unity.SourceGenerators/Unity.SourceGenerators.dll"
 -analyzer:"C:/Program Files/Unity/Hub/Editor/6000.0.28f1/Editor/Data/Tools/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll"
-"Assets/Scripts/EnemyMovement.cs"
+"Assets/Scripts/BulletScript.cs"
+"Assets/Scripts/EnemyScript.cs"
 "Assets/Scripts/EnemySpawner.cs"
 "Assets/Scripts/gameControlScript.cs"
+"Assets/Scripts/GridCell.cs"
+"Assets/Scripts/GridManager.cs"
 "Assets/Scripts/Tower.cs"
 "Assets/Scripts/TowerSpawner.cs"
 -langversion:9.0
