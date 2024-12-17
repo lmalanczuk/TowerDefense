@@ -74,12 +74,12 @@ public class Tower : MonoBehaviour
         {
             case TowerType.earth:
                 attackRange = 5f;
-                attackCooldown = 5f;
-                bulletForce = 30f;
+                attackCooldown = 3f;
+                bulletForce = 10f;
                 break;
             case TowerType.fire:
                 attackRange = 5f;
-                attackCooldown = 1f;
+                attackCooldown = 2f;
                 bulletForce = 10f;
                 break;
             case TowerType.water:
@@ -88,9 +88,9 @@ public class Tower : MonoBehaviour
                 bulletForce = 10f;
                 break;
             case TowerType.wind:
-                attackRange = 10f;
-                attackCooldown = 4f;
-                bulletForce = 35f;
+                attackRange = 7f;
+                attackCooldown = 2f;
+                bulletForce = 13f;
                 break;
         }
     }

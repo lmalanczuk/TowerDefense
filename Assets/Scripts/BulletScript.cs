@@ -7,6 +7,7 @@ public class BulletScript : MonoBehaviour
     private int damage;
     private float explosionRadius; // Zasiêg eksplozji dla proximity damage
     private ParticleSystem particleSystem;
+    private ParticleSystem impactParticles;
 
     private enum BulletType
     {
@@ -18,8 +19,9 @@ public class BulletScript : MonoBehaviour
 
     void Start()
     {
-        SetType();
-        particleSystem = GetComponentInChildren<ParticleSystem>();
+        SetType(); 
+        particleSystem = transform.GetChild(0).GetComponent<ParticleSystem>();
+        impactParticles = transform.GetChild(1).GetComponent<ParticleSystem>();
         Destroy(gameObject, 2f);
     }
 
@@ -27,14 +29,8 @@ public class BulletScript : MonoBehaviour
     {
         if (other.CompareTag("Enemy"))
         {
-            if (bulletType == BulletType.earth)
-            {
-                ApplyProximityDamage();
-            }
-            else
-            {
-                DealDamage(other.gameObject);
-            }
+      
+            DealDamage(other.gameObject);
             HandleParticles();
             Destroy(gameObject);
         }
@@ -74,10 +70,22 @@ public class BulletScript : MonoBehaviour
                 case BulletType.water:
                     enemy.ApplySlow();
                     break;
+                case BulletType.earth:
+                    ApplyProximityDamage();
+                    break;
+                case BulletType.wind:
+                    
+                    break;
             }
+            ImpactParticles();
         }
     }
 
+    private void ImpactParticles()
+    {
+        impactParticles.Play();
+        impactParticles.transform.parent = null;
+    }
     private void HandleParticles()
     {
         particleSystem.transform.parent = null;
@@ -90,7 +98,7 @@ public class BulletScript : MonoBehaviour
         {
             case BulletType.earth:
                 damage = 20;
-                explosionRadius = 5f; // Ustaw zasiêg eksplozji
+                explosionRadius = 5f;
                 break;
             case BulletType.fire:
                 damage = 25;

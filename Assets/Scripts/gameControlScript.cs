@@ -56,6 +56,10 @@ public class gameControlScript : MonoBehaviour
         {
             enemySpawner.SpawnEnemy();
         }
+        if (Input.GetKeyUp(KeyCode.A))
+        {
+            enemySpawner.SpawnWave();
+        }
 
         // Restart
         if (Input.GetKeyUp(KeyCode.R))

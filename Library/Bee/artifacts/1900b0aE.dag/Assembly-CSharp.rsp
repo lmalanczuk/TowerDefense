@@ -427,6 +427,8 @@
 "Assets/Scripts/EnemyScript.cs"
 "Assets/Scripts/EnemySpawner.cs"
 "Assets/Scripts/gameControlScript.cs"
+"Assets/Scripts/GridCell.cs"
+"Assets/Scripts/GridManager.cs"
 "Assets/Scripts/Tower.cs"
 "Assets/Scripts/TowerSpawner.cs"
 -langversion:9.0
