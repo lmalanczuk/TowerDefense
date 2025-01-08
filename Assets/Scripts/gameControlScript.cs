@@ -12,8 +12,28 @@ public class gameControlScript : MonoBehaviour
     [SerializeField] private GameObject towerWind;
     [SerializeField] private TowerSpawner towerSpawner; // Odwo³anie do TowerSpawner
     [SerializeField] private EnemySpawner enemySpawner; // Referencja do spawnera
+    [SerializeField] private int gold = 0;
+    
 
     void Update()
+    {
+        PlaceTurret();
+        DebugControls();
+
+       
+
+        
+
+      
+    }
+    
+    //wywo³uje umierajacy wrog
+    public void ChangeGold(int value)
+    {
+        gold += value;
+        FindFirstObjectByType<UIScript>().UpdateGold(gold);
+    }
+    public void DebugControls()
     {
         // Zmiana miejsca bazy
         if (Input.GetKeyUp(KeyCode.Mouse0))
@@ -25,6 +45,25 @@ public class gameControlScript : MonoBehaviour
             }
         }
 
+        // Spawnowanie wrogów
+        if (Input.GetKeyUp(KeyCode.S))
+        {
+            enemySpawner.SpawnEnemy();
+        }
+        if (Input.GetKeyUp(KeyCode.A))
+        {
+            enemySpawner.SpawnWave();
+        }
+
+        // Restart
+        if (Input.GetKeyUp(KeyCode.R))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+    }
+    public void PlaceTurret()
+    {
+        
         // Rozpoczêcie stawiania ró¿nych typów wie¿
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
@@ -50,21 +89,5 @@ public class gameControlScript : MonoBehaviour
 
         // Aktualizacja lokalizacji wie¿y
         towerSpawner.UpdatePlacement();
-
-        // Spawnowanie wrogów
-        if (Input.GetKeyUp(KeyCode.S))
-        {
-            enemySpawner.SpawnEnemy();
-        }
-        if (Input.GetKeyUp(KeyCode.A))
-        {
-            enemySpawner.SpawnWave();
-        }
-
-        // Restart
-        if (Input.GetKeyUp(KeyCode.R))
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        }
     }
 }

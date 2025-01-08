@@ -25,6 +25,7 @@ public class EnemyScript : MonoBehaviour
     }
 
     private float ms;
+    private int reward;
 
     [SerializeField]
     private EnemyClass enemyClass;
@@ -57,6 +58,7 @@ public class EnemyScript : MonoBehaviour
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+        
         waterParticles = transform.GetChild(0).GetComponent<ParticleSystem>();
         fireParticles = transform.GetChild(1).GetComponent<ParticleSystem>();
     }
@@ -65,11 +67,16 @@ public class EnemyScript : MonoBehaviour
     {
         
         agent.SetDestination(target.transform.position);
-        if(hp<=0)
+        Die();
+        
+    }
+    public void Die()
+    {
+        if (hp <= 0)
         {
+            FindFirstObjectByType<gameControlScript>().ChangeGold(reward);
             Destroy(gameObject);
         }
-        
     }
     
     public void ApplySlow()
@@ -132,11 +139,13 @@ public class EnemyScript : MonoBehaviour
                 hp = 100;
                 agent.speed = 2f;
                 ms = agent.speed;
+                reward = UnityEngine.Random.Range(12, 18);
                 break;
             case EnemyClass.Heavy:
                 hp= 200;
                 agent.speed = 1f;
                 ms = agent.speed;
+                reward = UnityEngine.Random.Range(22, 28); ;
                 break;
         }
     }
