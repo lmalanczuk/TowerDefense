@@ -430,7 +430,6 @@
 "Assets/Scripts/GridCell.cs"
 "Assets/Scripts/GridManager.cs"
 "Assets/Scripts/Tower.cs"
-"Assets/Scripts/TowerSpawner.cs"
 "Assets/Scripts/UIScript.cs"
 "Assets/TextMesh Pro/Examples & Extras/Scripts/Benchmark01.cs"
 "Assets/TextMesh Pro/Examples & Extras/Scripts/Benchmark01_UGUI.cs"
