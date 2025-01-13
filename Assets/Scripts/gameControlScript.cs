@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static Tower;
 
 public class gameControlScript : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class gameControlScript : MonoBehaviour
     [SerializeField] private GameObject towerEarth;
     [SerializeField] private GameObject towerWind;
     [SerializeField] private EnemySpawner enemySpawner; // Referencja do spawnera
-    [SerializeField] private int gold = 0;
+    [SerializeField] private int gold;
     private UIScript hudScript;
 
     //przeniesonie z TowerSpawner
@@ -27,6 +28,7 @@ public class gameControlScript : MonoBehaviour
         {
             Debug.LogError("GridManager not assigned! Please attach it in the inspector.");
         }
+        ChangeGold(0);
     }
 
     void Update()
@@ -42,17 +44,26 @@ public class gameControlScript : MonoBehaviour
         gold += value;
         hudScript.UpdateGold(gold);
     }
+    public bool EnoughGold(GameObject tower)
+    {
+        int cost = tower.GetComponent<Tower>().getCost();
+        if (cost <= gold) { 
+            ChangeGold(-cost);
+            return true;  }
+        else { Debug.Log("false"); return false;}
+        
+    }
     public void DebugControls()
     {
         // Zmiana miejsca bazy
-        if (Input.GetKeyUp(KeyCode.Mouse0))
-        {
-            Ray ray = camera.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit))
-            {
-                target.transform.position = new Vector3(hit.point.x, 1, hit.point.z);
-            }
-        }
+        //if (Input.GetKeyUp(KeyCode.Mouse0))
+        //{
+        //    Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+        //    if (Physics.Raycast(ray, out RaycastHit hit))
+        //    {
+        //        target.transform.position = new Vector3(hit.point.x, 1, hit.point.z);
+        //    }
+        //}
 
         // Spawnowanie wrogów
         if (Input.GetKeyUp(KeyCode.S))
@@ -81,7 +92,6 @@ public class gameControlScript : MonoBehaviour
             {
                 pendingTower = Instantiate(towerWind);
                 hudScript.activeTurret("wind");
-                pendingTower.SetActive(false); // Tymczasowa wie¿a jest niewidoczna, dopóki nie znajdzie miejsca
             }
             
         }
@@ -91,7 +101,6 @@ public class gameControlScript : MonoBehaviour
             {
                 pendingTower = Instantiate(towerWater);
                 hudScript.activeTurret("water");
-                pendingTower.SetActive(false); // Tymczasowa wie¿a jest niewidoczna, dopóki nie znajdzie miejsca
             }
             
         }
@@ -101,7 +110,6 @@ public class gameControlScript : MonoBehaviour
             {
                 pendingTower = Instantiate(towerFire);
                 hudScript.activeTurret("fire");
-                pendingTower.SetActive(false); // Tymczasowa wie¿a jest niewidoczna, dopóki nie znajdzie miejsca
             }
             
         }
@@ -111,7 +119,6 @@ public class gameControlScript : MonoBehaviour
             {
                 pendingTower = Instantiate(towerEarth);
                 hudScript.activeTurret("earth");
-                pendingTower.SetActive(false); // Tymczasowa wie¿a jest niewidoczna, dopóki nie znajdzie miejsca
             }
             
         }
@@ -123,13 +130,12 @@ public class gameControlScript : MonoBehaviour
             {
                 pendingTower = Instantiate(barricade);
                 hudScript.activeTurret("barricade");
-                pendingTower.SetActive(false); // Tymczasowa wie¿a jest niewidoczna, dopóki nie znajdzie miejsca
             }
             
         }
 
-        // Aktualizacja lokalizacji wie¿y
-        UpdatePlacement();
+            UpdatePlacement();
+        
     }
 
     public void StartPlacingTower(GameObject towerPrefab)
@@ -138,7 +144,6 @@ public class gameControlScript : MonoBehaviour
         if (pendingTower == null)
         {
             pendingTower = Instantiate(towerPrefab);
-            pendingTower.SetActive(false); // Tymczasowa wie¿a jest niewidoczna, dopóki nie znajdzie miejsca
         }
     }
 
@@ -153,23 +158,27 @@ public class gameControlScript : MonoBehaviour
             Vector2Int gridPosition = gridManager.GetGridCoordinates(raycastHit.point);
 
             // Sprawdzanie, czy komórka jest dostêpna
-            if (gridManager.IsCellAvailable(gridPosition.x, gridPosition.y))
+            if (gridManager.IsCellAvailable(gridPosition.x, gridPosition.y) )
             {
                 Vector3 worldPosition = gridManager.GetWorldPosition(gridPosition.x, gridPosition.y);
                 pendingTower.transform.position = new Vector3(worldPosition.x, 0.5f, worldPosition.z);
-                pendingTower.SetActive(true); // Wie¿a staje siê widoczna
-            }
-            else
-            {
-                pendingTower.SetActive(false); // Ukryj wie¿ê, jeœli nie ma miejsca
             }
         }
-
-        // Zatwierdzenie ustawienia wie¿y po klikniêciu prawym przyciskiem myszy
+        if (pendingTower.GetComponent<Tower>().canPlace)
+        {
+            if (Input.GetMouseButtonDown(0) && EnoughGold(pendingTower))
+            {
+                PlaceTower();
+            }
+        }
         if (Input.GetMouseButtonDown(1))
         {
-            PlaceTower();
+            Destroy(pendingTower);
+            pendingTower = null;
+            hudScript.cancelActiveTurret();
         }
+
+
     }
 
     private void PlaceTower()
@@ -182,7 +191,10 @@ public class gameControlScript : MonoBehaviour
             Vector2Int gridPosition = gridManager.GetGridCoordinates(raycastHit.point);
             if (gridManager.IsCellAvailable(gridPosition.x, gridPosition.y))
             {
-                gridManager.PlaceTower(gridPosition.x, gridPosition.y); // Oznacz komórkê jako zajêt¹
+                if (pendingTower.GetComponent<Tower>().towerType != TowerType.barricade)
+                {
+                    gridManager.PlaceTower(gridPosition.x, gridPosition.y); // Oznacz komórkê jako zajêt¹
+                }
                 pendingTower = null; // Koñczymy tryb ustawiania
                 hudScript.cancelActiveTurret();
             }

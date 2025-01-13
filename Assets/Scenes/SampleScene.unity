@@ -5566,7 +5566,7 @@ GameObject:
   - component: {fileID: 892844787}
   - component: {fileID: 892844786}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: barricadeCost
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8453,7 +8453,7 @@ GameObject:
   - component: {fileID: 1359781483}
   - component: {fileID: 1359781482}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: windCost
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8520,7 +8520,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 25
+  m_text: 15
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -9433,7 +9433,7 @@ GameObject:
   - component: {fileID: 1569226501}
   - component: {fileID: 1569226500}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: waterCost
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9500,7 +9500,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 40
+  m_text: 30
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -10300,7 +10300,7 @@ MonoBehaviour:
   towerEarth: {fileID: 3795019313203682884, guid: a7ac2157b64511c44878b2bc9c39b6c1, type: 3}
   towerWind: {fileID: 3795019313203682884, guid: e0689bcf5555637439370109917841c9, type: 3}
   enemySpawner: {fileID: 372781995}
-  gold: 0
+  gold: 60
   gridManager: {fileID: 179198868}
 --- !u!4 &1781470667
 Transform:
@@ -11448,51 +11448,6 @@ LightingSettings:
   m_PVRFilteringAtrousPositionSigmaIndirect: 2
   m_PVRFilteringAtrousPositionSigmaAO: 1
   m_RespectSceneVisibilityWhenBakingGI: 0
---- !u!1 &1975285524
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1975285526}
-  - component: {fileID: 1975285525}
-  m_Layer: 0
-  m_Name: TowerSpawner
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1975285525
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1975285524}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 948be0bb040326f499e99eb1c507abae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gridManager: {fileID: 179198868}
---- !u!4 &1975285526
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1975285524}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.2173281, y: -4.861544, z: -9.510508}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1984721245
 GameObject:
   m_ObjectHideFlags: 0
@@ -12252,7 +12207,7 @@ GameObject:
   - component: {fileID: 2074363738}
   - component: {fileID: 2074363737}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: fireCost
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12784,7 +12739,7 @@ GameObject:
   - component: {fileID: 2085868613}
   - component: {fileID: 2085868612}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: earthCost
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13548,14 +13503,13 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 963194228}
+  - {fileID: 809004530}
+  - {fileID: 1781470667}
   - {fileID: 705507995}
   - {fileID: 1273166648}
   - {fileID: 831332478}
-  - {fileID: 1781470667}
   - {fileID: 312461203}
   - {fileID: 1206597963}
-  - {fileID: 1975285526}
   - {fileID: 372781996}
   - {fileID: 179198869}
   - {fileID: 1734122659}
-  - {fileID: 809004530}

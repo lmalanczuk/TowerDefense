@@ -139,13 +139,13 @@ public class EnemyScript : MonoBehaviour
                 hp = 100;
                 agent.speed = 2f;
                 ms = agent.speed;
-                reward = UnityEngine.Random.Range(12, 18);
+                reward = UnityEngine.Random.Range(7, 13);
                 break;
             case EnemyClass.Heavy:
                 hp= 200;
                 agent.speed = 1f;
                 ms = agent.speed;
-                reward = UnityEngine.Random.Range(22, 28); ;
+                reward = UnityEngine.Random.Range(17, 23); ;
                 break;
         }
     }

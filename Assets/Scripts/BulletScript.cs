@@ -107,7 +107,7 @@ public class BulletScript : MonoBehaviour
                 damage = 10;
                 break;
             case BulletType.wind:
-                damage = 20;
+                damage = 25;
                 break;
         }
     }

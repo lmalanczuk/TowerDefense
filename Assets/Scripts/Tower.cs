@@ -1,9 +1,10 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Tower : MonoBehaviour
 {
     [SerializeField]
-    private TowerType towerType;
+    public TowerType towerType;
     [SerializeField]
     private GameObject bulletPrefab; // Prefab kuli (pocisku)
     private float attackRange; // Zasięg ataku
@@ -12,6 +13,10 @@ public class Tower : MonoBehaviour
     private LayerMask enemyLayer; // Warstwa, w której znajdują się przeciwnicy
     private float towerHeight = 2f; // Wysokość wieży, w zależności od jej rozmiaru
     private float bulletForce;
+    private int cost;
+    public bool canPlace;
+    private Renderer objectRenderer;
+    private Dictionary<Renderer, Material[]> originalMaterials = new Dictionary<Renderer, Material[]>();
 
 
 
@@ -20,13 +25,18 @@ public class Tower : MonoBehaviour
     private void Start()
     {
         SetType();
+        if (towerType != TowerType.barricade)
+        {
+            makeTransparent();
+        }
     }
-    private enum TowerType
+    public enum TowerType
     {
         earth,
         fire,
         water,
-        wind
+        wind,
+        barricade
     }
     private void Update()
     {
@@ -49,6 +59,85 @@ public class Tower : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Obstacles"))
+        {
+            if(towerType == TowerType.barricade)
+            {
+                makeTransparent();
+                canPlace = false;
+            }
+            else
+            {
+                RestoreOriginalMaterials();
+                canPlace = true;
+            }
+            
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Obstacles"))
+        {
+            if (towerType == TowerType.barricade)
+            {
+                RestoreOriginalMaterials();
+                canPlace = true;
+            }
+            else
+            {
+                makeTransparent();
+                canPlace = false;
+            }
+        }
+    }
+
+    private void SaveOriginalMaterials()
+    {
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        foreach (Renderer renderer in renderers)
+        {
+            originalMaterials[renderer] = renderer.materials;
+        }
+    }
+    public void makeTransparent()
+    {
+        SaveOriginalMaterials();
+
+        foreach (Renderer renderer in originalMaterials.Keys)
+        {
+            Material[] newMaterials = new Material[renderer.materials.Length];
+
+            for (int i = 0; i < renderer.materials.Length; i++)
+            {
+                Material redTransparentMaterial = new Material(renderer.materials[i]);
+                redTransparentMaterial.color = new Color(1f, 0f, 0f, 0.5f);
+                redTransparentMaterial.SetFloat("_Mode", 3); 
+                redTransparentMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+                redTransparentMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+                redTransparentMaterial.SetInt("_ZWrite", 0);
+                redTransparentMaterial.DisableKeyword("_ALPHATEST_ON");
+                redTransparentMaterial.EnableKeyword("_ALPHABLEND_ON");
+                redTransparentMaterial.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+                redTransparentMaterial.renderQueue = 3000;
+
+                newMaterials[i] = redTransparentMaterial;
+            }
+
+            renderer.materials = newMaterials;
+        }
+    }
+    public void RestoreOriginalMaterials()
+    {
+        foreach (var entry in originalMaterials)
+        {
+            entry.Key.materials = entry.Value;
+        }
+
+        originalMaterials.Clear(); // Optionally clear the stored materials
+    }
     private void ShootAtEnemy(GameObject enemy)
     {
         // Obliczamy punkt strzału: góra wieży
@@ -76,22 +165,34 @@ public class Tower : MonoBehaviour
                 attackRange = 5f;
                 attackCooldown = 3f;
                 bulletForce = 10f;
+                cost = 90;
                 break;
             case TowerType.fire:
                 attackRange = 5f;
                 attackCooldown = 2f;
                 bulletForce = 10f;
+                cost = 50;
                 break;
             case TowerType.water:
                 attackRange = 5f;
                 attackCooldown = 1f;
                 bulletForce = 10f;
+                cost = 30;
                 break;
             case TowerType.wind:
-                attackRange = 7f;
-                attackCooldown = 2f;
+                attackRange = 8f;
+                attackCooldown = 1f;
                 bulletForce = 13f;
+                cost = 15;
+                break;
+            case TowerType.barricade:
+                cost = 60;
                 break;
         }
+    }
+
+    public int getCost()
+    {
+        return cost;
     }
 }
