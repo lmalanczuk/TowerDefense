@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-//ustawienie celu jako baza
 
 
 [RequireComponent(typeof(NavMeshAgent))]
@@ -26,6 +25,7 @@ public class EnemyScript : MonoBehaviour
 
     private float ms;
     private int reward;
+    private int damage;
 
     [SerializeField]
     private EnemyClass enemyClass;
@@ -47,7 +47,14 @@ public class EnemyScript : MonoBehaviour
 
     private Coroutine burnCoroutine;
 
-   
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("Finish"))
+        {
+            FindFirstObjectByType<gameControlScript>().ChangeHealth(damage);
+            Destroy(gameObject);
+        }
+    }
 
     private void Start()
     {
@@ -140,12 +147,14 @@ public class EnemyScript : MonoBehaviour
                 agent.speed = 2f;
                 ms = agent.speed;
                 reward = UnityEngine.Random.Range(7, 13);
+                damage = 1;
                 break;
             case EnemyClass.Heavy:
                 hp= 200;
                 agent.speed = 1f;
                 ms = agent.speed;
-                reward = UnityEngine.Random.Range(17, 23); ;
+                reward = UnityEngine.Random.Range(17, 23);
+                damage = 3;
                 break;
         }
     }

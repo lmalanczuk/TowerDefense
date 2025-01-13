@@ -9,6 +9,8 @@ public class UIScript : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI goldText;
     [SerializeField] private Animator goldAnimator;
+    [SerializeField] private TextMeshProUGUI healthText;
+    [SerializeField] private Animator healthAnimator;
     [SerializeField] private Image wind;
     [SerializeField] private Image water;
     [SerializeField] private Image fire;
@@ -17,7 +19,6 @@ public class UIScript : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
     }
 
     // Update is called once per frame
@@ -54,6 +55,12 @@ public class UIScript : MonoBehaviour
         fire.transform.localScale = Vector3.one;
         earth.transform.localScale = Vector3.one;
         barricade.transform.localScale = Vector3.one;
+    }
+    public void UpdateHealth(int value)
+    {
+        healthAnimator.SetTrigger("goldGain");
+        healthText.text = value.ToString();
+
     }
     public void UpdateGold(int value)
     {

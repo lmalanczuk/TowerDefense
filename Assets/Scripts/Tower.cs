@@ -15,8 +15,10 @@ public class Tower : MonoBehaviour
     private float bulletForce;
     private int cost;
     public bool canPlace;
+    public bool towerActivated;
     private Renderer objectRenderer;
     private Dictionary<Renderer, Material[]> originalMaterials = new Dictionary<Renderer, Material[]>();
+
 
 
 
@@ -45,7 +47,7 @@ public class Tower : MonoBehaviour
         // Wykrywanie wrogów w zasięgu
         Collider[] enemiesInRange = Physics.OverlapSphere(transform.position, attackRange, enemyLayer);
 
-        if (enemiesInRange.Length > 0)
+        if (enemiesInRange.Length > 0 && towerActivated)
         {
             // Strzelaj do pierwszego wykrytego wroga
             GameObject targetEnemy = enemiesInRange[0].gameObject;

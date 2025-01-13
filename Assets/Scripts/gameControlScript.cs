@@ -13,6 +13,7 @@ public class gameControlScript : MonoBehaviour
     [SerializeField] private GameObject towerWind;
     [SerializeField] private EnemySpawner enemySpawner; // Referencja do spawnera
     [SerializeField] private int gold;
+    [SerializeField] private int health;
     private UIScript hudScript;
 
     //przeniesonie z TowerSpawner
@@ -29,12 +30,14 @@ public class gameControlScript : MonoBehaviour
             Debug.LogError("GridManager not assigned! Please attach it in the inspector.");
         }
         ChangeGold(0);
+        ChangeHealth(0);
     }
 
     void Update()
     {
         SelectTurret();
         DebugControls();
+        GameOver();
 
     }
     
@@ -44,13 +47,25 @@ public class gameControlScript : MonoBehaviour
         gold += value;
         hudScript.UpdateGold(gold);
     }
+    public void ChangeHealth(int value)
+    {
+        health -= value;
+        hudScript.UpdateHealth(health);
+    }
+    public void GameOver()
+    {
+        if (health <= 0)
+        {
+            Debug.Log("przegrana");
+        }
+    }
     public bool EnoughGold(GameObject tower)
     {
         int cost = tower.GetComponent<Tower>().getCost();
         if (cost <= gold) { 
             ChangeGold(-cost);
             return true;  }
-        else { Debug.Log("false"); return false;}
+        else { Debug.Log("za malo siana"); return false;}
         
     }
     public void DebugControls()
@@ -168,7 +183,9 @@ public class gameControlScript : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0) && EnoughGold(pendingTower))
             {
+                pendingTower.GetComponent<Tower>().towerActivated = true;
                 PlaceTower();
+                
             }
         }
         if (Input.GetMouseButtonDown(1))
