@@ -429,6 +429,7 @@
 "Assets/Scripts/gameControlScript.cs"
 "Assets/Scripts/GridCell.cs"
 "Assets/Scripts/GridManager.cs"
+"Assets/Scripts/SceneController.cs"
 "Assets/Scripts/Tower.cs"
 "Assets/Scripts/UIScript.cs"
 "Assets/TextMesh Pro/Examples & Extras/Scripts/Benchmark01.cs"
