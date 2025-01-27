@@ -7,6 +7,7 @@ TagManager:
   - Enemy
   - Heavy
   - Bullet
+  - Barricade
   layers:
   - Default
   - TransparentFX

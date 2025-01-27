@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,13 +11,9 @@ using UnityEngine.AI;
 public class EnemyScript : MonoBehaviour
 {
     private GameObject target;
-
     private NavMeshAgent agent;
 
-    private RaycastHit[] hits = new RaycastHit[1];
-
-
-    private int hp; 
+    private int hp;
     public int Health
     {
         get { return hp; }
@@ -36,28 +33,32 @@ public class EnemyScript : MonoBehaviour
     }
 
     private ParticleSystem waterParticles;
-
     private bool isSlowed;
-
     private Coroutine slowCoroutine;
 
     private ParticleSystem fireParticles;
-
     private bool isBurning;
-
     private Coroutine burnCoroutine;
+
+    private List<GameObject> barricades;
+    private GameObject currentTargetBarricade;
+
+    private gameControlScript gameControlScript;
+
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Finish"))
+        if (other.CompareTag("Finish"))
         {
-            FindFirstObjectByType<gameControlScript>().ChangeHealth(damage);
+            gameControlScript.ChangeHealth(damage);
+            gameControlScript.CheckForRound(-1);
             Destroy(gameObject);
         }
     }
 
     private void Start()
     {
+        gameControlScript = FindFirstObjectByType<gameControlScript>();
         target = GameObject.Find("Base");
         SetClass();
 
@@ -65,40 +66,96 @@ public class EnemyScript : MonoBehaviour
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
-        
         waterParticles = transform.GetChild(0).GetComponent<ParticleSystem>();
         fireParticles = transform.GetChild(1).GetComponent<ParticleSystem>();
     }
 
     private void Update()
     {
-        
-        agent.SetDestination(target.transform.position);
+        if (HasPathToBase())
+        {
+            agent.SetDestination(target.transform.position);
+        }
+        else
+        {
+            HandleBarricade();
+        }
         Die();
+    }
+
+    private bool HasPathToBase()
+    {
+        NavMeshPath path = new NavMeshPath();
+        agent.CalculatePath(target.transform.position, path);
+        return path.status == NavMeshPathStatus.PathComplete;
+    }
+
+    private void HandleBarricade()
+    {
+        barricades = new List<GameObject>(GameObject.FindGameObjectsWithTag("Barricade"));
+        if (currentTargetBarricade == null || !barricades.Contains(currentTargetBarricade))
+        {
+            currentTargetBarricade = FindClosestBarricade();
+        }
+
+        if (currentTargetBarricade != null)
+        {
+            agent.SetDestination(currentTargetBarricade.transform.position);
+
+            if (Vector3.Distance(transform.position, currentTargetBarricade.transform.position) < 1.5f)
+            {
+                Destroy(currentTargetBarricade);
+                barricades.Remove(currentTargetBarricade);
+                currentTargetBarricade = null;
+            }
+        }
+    }
+
+    private GameObject FindClosestBarricade()
+    {
+        GameObject closest = null;
+        float shortestDistance = float.MaxValue;
+
+        foreach (var barricade in barricades)
+        {
+            float distance = Vector3.Distance(transform.position, barricade.transform.position);
+            if (distance < shortestDistance)
+            {
+                shortestDistance = distance;
+                closest = barricade;
+            }
+        }
+
+        return closest;
+    }
+    public void OnDestroyed()
+    {
         
     }
     public void Die()
     {
         if (hp <= 0)
         {
-            FindFirstObjectByType<gameControlScript>().ChangeGold(reward);
+            gameControlScript.ChangeGold(reward);
+            gameControlScript.CheckForRound(-1);
             Destroy(gameObject);
         }
     }
-    
+
     public void ApplySlow()
     {
         if (isSlowed)
         {
             StopCoroutine(slowCoroutine);
             agent.speed = ms;
-            slowCoroutine=StartCoroutine(SlowEffect(3f));
+            slowCoroutine = StartCoroutine(SlowEffect(3f));
         }
         else
         {
             slowCoroutine = StartCoroutine(SlowEffect(3f));
         }
     }
+
     private IEnumerator SlowEffect(float duration)
     {
         float originalSpeed = agent.speed;
@@ -124,18 +181,18 @@ public class EnemyScript : MonoBehaviour
         }
     }
 
-    private IEnumerator BurnEffect(float duration) 
+    private IEnumerator BurnEffect(float duration)
     {
         isBurning = true;
         fireParticles.Play();
         int i = 6;
         while (i > 0)
         {
-            yield return new WaitForSeconds(duration/6);
+            yield return new WaitForSeconds(duration / 6);
             hp = hp - 10;
-            i =i - 1;
+            i = i - 1;
         }
-        isBurning=false;
+        isBurning = false;
     }
 
     private void SetClass()
@@ -146,18 +203,20 @@ public class EnemyScript : MonoBehaviour
                 hp = 100;
                 agent.speed = 2f;
                 ms = agent.speed;
-                reward = UnityEngine.Random.Range(7, 13);
+                reward = UnityEngine.Random.Range(3, 9);
                 damage = 1;
                 break;
             case EnemyClass.Heavy:
-                hp= 200;
+                hp = 400;
                 agent.speed = 1f;
                 ms = agent.speed;
-                reward = UnityEngine.Random.Range(17, 23);
+                reward = UnityEngine.Random.Range(8, 14);
                 damage = 3;
                 break;
         }
     }
 
-    
+    public void OnEnemyDeath()
+    {
+    }
 }

@@ -3409,13 +3409,13 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 7145830590694509087}
+  - {fileID: 2469553575230457120}
   - {fileID: 4515639280212732}
   - {fileID: 4320717184670998}
   - {fileID: 4035070621872874}
   - {fileID: 4229024417225998}
   - {fileID: 4752741893240714}
-  - {fileID: 2469553575230457120}
-  - {fileID: 7145830590694509087}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &95716040400269070
@@ -3449,7 +3449,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 1186413494234004}
   m_Enabled: 1
   m_AgentTypeID: 1479372276
-  m_Radius: 0.5
+  m_Radius: 0.23
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
@@ -18785,7 +18785,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 0.53
+      value: 0.29
       mode: 0
       spread: 0
       speed:
@@ -22894,7 +22894,7 @@ Transform:
   m_GameObject: {fileID: 6774673076802756511}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1.6, z: 0}
   m_LocalScale: {x: 1.5, y: 1.5, z: 0.6999998}
   m_ConstrainProportionsScale: 0
   m_Children: []

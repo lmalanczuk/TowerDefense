@@ -1,11 +1,13 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static Tower;
+//using static Unity.VisualScripting.Round<TInput, TOutput>;
+//using static Unity.VisualScripting.Round<TInput, TOutput>;
 
 public class gameControlScript : MonoBehaviour
 {
     [SerializeField] private Camera camera;
-    [SerializeField] private GameObject target;
     [SerializeField] private GameObject barricade;
     [SerializeField] private GameObject towerFire;
     [SerializeField] private GameObject towerWater;
@@ -14,7 +16,10 @@ public class gameControlScript : MonoBehaviour
     [SerializeField] private EnemySpawner enemySpawner; // Referencja do spawnera
     [SerializeField] private int gold;
     [SerializeField] private int health;
+    [SerializeField] private bool roundPlaying;
+    private int enemiesAlive;
     private UIScript hudScript;
+    private List<GameObject> activeEnemies = new List<GameObject>();
 
     //przeniesonie z TowerSpawner
     private GameObject pendingTower; // Tymczasowa wie¿a w trakcie ustawiania
@@ -23,6 +28,8 @@ public class gameControlScript : MonoBehaviour
 
     private void Start()
     {
+        
+        roundPlaying = false;
         mainCamera = Camera.main;
         hudScript = FindFirstObjectByType<UIScript>();
         if (gridManager == null)
@@ -38,9 +45,25 @@ public class gameControlScript : MonoBehaviour
         SelectTurret();
         DebugControls();
         GameOver();
-
     }
-    
+    public void RoundStart()
+    {
+        roundPlaying = true;
+        enemySpawner.SpawnWave();
+        hudScript.RoundButtonActive(false);
+    }
+    public void CheckForRound(int enemies)
+    {
+        enemiesAlive+= enemies;
+        Debug.Log(enemiesAlive);
+        if (enemiesAlive < 1)
+        {
+            roundPlaying = false;
+            hudScript.RoundButtonActive(true);
+        }
+        Debug.Log(roundPlaying);
+    }
+
     //wywo³uje umierajacy wrog
     public void ChangeGold(int value)
     {
@@ -56,7 +79,7 @@ public class gameControlScript : MonoBehaviour
     {
         if (health <= 0)
         {
-            Debug.Log("przegrana");
+            SceneManager.LoadScene("menu");
         }
     }
     public bool EnoughGold(GameObject tower)
@@ -83,10 +106,12 @@ public class gameControlScript : MonoBehaviour
         // Spawnowanie wrogów
         if (Input.GetKeyUp(KeyCode.S))
         {
+            roundPlaying = true;
             enemySpawner.SpawnEnemy();
         }
         if (Input.GetKeyUp(KeyCode.A))
         {
+            roundPlaying=true;
             enemySpawner.SpawnWave();
         }
 
@@ -139,9 +164,9 @@ public class gameControlScript : MonoBehaviour
         }
         
         // Rozpoczêcie stawiania barykady
-        if (Input.GetKeyDown(KeyCode.Alpha5))
+        if (Input.GetKeyDown(KeyCode.Alpha5) && !roundPlaying)
         {
-            if (pendingTower == null)
+            if (pendingTower == null )
             {
                 pendingTower = Instantiate(barricade);
                 hudScript.activeTurret("barricade");

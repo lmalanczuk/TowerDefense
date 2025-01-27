@@ -16,6 +16,8 @@ public class UIScript : MonoBehaviour
     [SerializeField] private Image fire;
     [SerializeField] private Image earth;
     [SerializeField] private Image barricade;
+    [SerializeField] private Button roundButton;
+    [SerializeField] private TextMeshProUGUI roundButtonText;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -46,6 +48,22 @@ public class UIScript : MonoBehaviour
                 barricade.transform.localScale = barricade.transform.localScale * 1.3f;
                 break;
         }
+    }
+
+    public void RoundButtonActive(bool active)
+    {
+        EnemySpawner spawner = FindObjectOfType<EnemySpawner>();
+        int round = spawner.wave;
+        if(active)
+        {
+            roundButton.gameObject.SetActive(true);
+           roundButtonText.text = "Start round " + round.ToString(); ;
+        }
+        else
+        {
+            roundButton.gameObject.SetActive(false);
+        }
+
     }
 
     public void cancelActiveTurret()
