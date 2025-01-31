@@ -5,7 +5,7 @@ public class BulletScript : MonoBehaviour
     [SerializeField]
     private BulletType bulletType;
     private int damage;
-    private float explosionRadius; // Zasiêg eksplozji dla proximity damage
+    private float explosionRadius;
     private ParticleSystem particleSystem;
     private ParticleSystem impactParticles;
 
@@ -38,12 +38,10 @@ public class BulletScript : MonoBehaviour
 
     private void ApplyProximityDamage()
     {
-        // ZnajdŸ wszystkich wrogów w zasiêgu eksplozji z warstw¹ "Enemies"
         Collider[] enemiesInRange = Physics.OverlapSphere(transform.position, explosionRadius, LayerMask.GetMask("Enemies"));
 
         foreach (var collider in enemiesInRange)
         {
-            // Dodatkowo upewnij siê, ¿e collider ma tag "Enemy"
             if (collider.CompareTag("Enemy"))
             {
                 EnemyScript enemy = collider.GetComponent<EnemyScript>();

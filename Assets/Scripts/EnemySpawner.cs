@@ -16,10 +16,8 @@ public class EnemySpawner : MonoBehaviour
     private float spawnDelay = 0.5f;
     public int enemiesAlive;
 
-    // Ta metoda jest odpowiedzialna za spawnowanie wrogów
     private void Start()
     {
-        // Wyszukiwanie obiektów SpawnPoint1 w scenie
         Transform[] spawnPoints = FindObjectsOfType<Transform>();
         List<Transform> spawnPointList = new List<Transform>();
 
@@ -38,19 +36,18 @@ public class EnemySpawner : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Nie znaleziono dwóch obiektów SpawnPoint1 w scenie. Upewnij siê, ¿e s¹ poprawnie nazwane.");
+            Debug.LogError("Nie znaleziono dwóch obiektów SpawnPoint1 w scenie.");
         }
     }
     
     public void SpawnEnemy()
     {
-        int spawnPointIndex = Random.Range(0, 2); // Losowanie punktu spawnu
+        int spawnPointIndex = Random.Range(0, 2);
         Transform spawnPoint = (spawnPointIndex == 0) ? spawnPoint1 : spawnPoint2;
 
-        int enemyClass = Random.Range(0, 2); // Losowanie klasy wroga (0 - Light, 1 - Heavy)
+        int enemyClass = Random.Range(0, 2);
         GameObject enemyPrefab = (enemyClass == 0) ? lightEnemyPrefab : heavyEnemyPrefab;
 
-        // Spawnowanie wroga w wybranym punkcie
         Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity);
 
         FindFirstObjectByType<gameControlScript>().CheckForRound(1);

@@ -21,7 +21,7 @@ public class GridManager : MonoBehaviour
             for (int y = 0; y < gridHeight; y++)
             {
                 Vector3 worldPosition = GetWorldPosition(x, y);
-                grid[x, y] = new GridCell(worldPosition, true); // Domyœlnie dostêpne
+                grid[x, y] = new GridCell(worldPosition, true);
             }
         }
     }
@@ -48,10 +48,8 @@ public class GridManager : MonoBehaviour
 
     public bool IsCellAvailable(int x, int y)
     {
-        // Sprawdzenie, czy wspó³rzêdne s¹ w granicach siatki
         if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight)
         {
-            Debug.LogWarning($"Coordinates ({x}, {y}) are out of bounds.");
             return false;
         }
 
@@ -79,7 +77,6 @@ public class GridManager : MonoBehaviour
         int x = Mathf.FloorToInt(worldPosition.x / cellSize);
         int y = Mathf.FloorToInt(worldPosition.z / cellSize);
 
-        // Zabezpieczenie przed wyjœciem poza zakres
         x = Mathf.Clamp(x, 0, gridWidth - 1);
         y = Mathf.Clamp(y, 0, gridHeight - 1);
 

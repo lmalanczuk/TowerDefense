@@ -116,7 +116,7 @@ public class ProceduralWorldGenerator : MonoBehaviour
         foreach (var pos in allPaths)
         {
             Vector3 position = new Vector3(pos.x + 0.5f, 0f, pos.y + 0.5f);
-            Instantiate(fenceGroundPrefab, position, Quaternion.identity, transform); // Wizualizacja ścieżek
+            Instantiate(fenceGroundPrefab, position, Quaternion.identity, transform);
         }
 
         return allPaths;

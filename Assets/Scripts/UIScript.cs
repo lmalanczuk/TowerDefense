@@ -18,12 +18,10 @@ public class UIScript : MonoBehaviour
     [SerializeField] private Image barricade;
     [SerializeField] private Button roundButton;
     [SerializeField] private TextMeshProUGUI roundButtonText;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
     }
 
-    // Update is called once per frame
     void Update()
     {
         

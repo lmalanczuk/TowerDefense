@@ -6,12 +6,12 @@ public class Tower : MonoBehaviour
     [SerializeField]
     public TowerType towerType;
     [SerializeField]
-    private GameObject bulletPrefab; // Prefab kuli (pocisku)
-    private float attackRange; // Zasięg ataku
-    private float attackCooldown; // Czas między strzałami
+    private GameObject bulletPrefab;
+    private float attackRange;
+    private float attackCooldown;
     [SerializeField]
-    private LayerMask enemyLayer; // Warstwa, w której znajdują się przeciwnicy
-    private float towerHeight = 2f; // Wysokość wieży, w zależności od jej rozmiaru
+    private LayerMask enemyLayer;
+    private float towerHeight = 2f;
     private float bulletForce;
     private int cost;
     public bool canPlace;
@@ -22,7 +22,7 @@ public class Tower : MonoBehaviour
 
 
 
-    private float timeSinceLastAttack = 0f; // Czas od ostatniego ataku
+    private float timeSinceLastAttack = 0f;
 
     private void Start()
     {
@@ -44,19 +44,16 @@ public class Tower : MonoBehaviour
     {
         timeSinceLastAttack += Time.deltaTime;
 
-        // Wykrywanie wrogów w zasięgu
         Collider[] enemiesInRange = Physics.OverlapSphere(transform.position, attackRange, enemyLayer);
 
         if (enemiesInRange.Length > 0 && towerActivated)
         {
-            // Strzelaj do pierwszego wykrytego wroga
             GameObject targetEnemy = enemiesInRange[0].gameObject;
 
-            // Jeśli minął czas na nowy strzał, wykonaj atak
             if (timeSinceLastAttack >= attackCooldown)
             {
                 ShootAtEnemy(targetEnemy);
-                timeSinceLastAttack = 0f; // Resetowanie czasu między atakami
+                timeSinceLastAttack = 0f;
             }
         }
     }
@@ -138,24 +135,19 @@ public class Tower : MonoBehaviour
             entry.Key.materials = entry.Value;
         }
 
-        originalMaterials.Clear(); // Optionally clear the stored materials
+        originalMaterials.Clear();
     }
     private void ShootAtEnemy(GameObject enemy)
     {
-        // Obliczamy punkt strzału: góra wieży
         Vector3 firePosition = transform.position + Vector3.up * towerHeight;
 
-        // Wystrzeliwujemy pocisk z pozycji na samej górze wieży
         GameObject bullet = Instantiate(bulletPrefab, firePosition, Quaternion.identity);
 
-        // Obliczanie kierunku do wroga
         Vector3 direction = (enemy.transform.position - firePosition).normalized;
 
-        // Uzyskanie Rigidbody pocisku i ustawienie prędkości
         Rigidbody bulletRb = bullet.GetComponent<Rigidbody>();
-        bulletRb.linearVelocity = direction * 10f; // Prędkość pocisku
+        bulletRb.linearVelocity = direction * 10f;
 
-        // Opcjonalnie: dodanie siły, by pocisk mógł "uderzyć" w cel
         bulletRb.AddForce(direction * bulletForce, ForceMode.Impulse);
     }
 

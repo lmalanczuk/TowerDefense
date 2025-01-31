@@ -13,7 +13,7 @@ public class gameControlScript : MonoBehaviour
     [SerializeField] private GameObject towerWater;
     [SerializeField] private GameObject towerEarth;
     [SerializeField] private GameObject towerWind;
-    [SerializeField] private EnemySpawner enemySpawner; // Referencja do spawnera
+    [SerializeField] private EnemySpawner enemySpawner;
     [SerializeField] private int gold;
     [SerializeField] private int health;
     [SerializeField] private bool roundPlaying;
@@ -21,10 +21,9 @@ public class gameControlScript : MonoBehaviour
     private UIScript hudScript;
     private List<GameObject> activeEnemies = new List<GameObject>();
 
-    //przeniesonie z TowerSpawner
-    private GameObject pendingTower; // Tymczasowa wie¿a w trakcie ustawiania
-    private Camera mainCamera; // Kamera do raycastów
-    [SerializeField] private GridManager gridManager; // Referencja do mened¿era siatki
+    private GameObject pendingTower;
+    private Camera mainCamera;
+    [SerializeField] private GridManager gridManager;
 
     private void Start()
     {
@@ -32,10 +31,6 @@ public class gameControlScript : MonoBehaviour
         roundPlaying = false;
         mainCamera = Camera.main;
         hudScript = FindFirstObjectByType<UIScript>();
-        if (gridManager == null)
-        {
-            Debug.LogError("GridManager not assigned! Please attach it in the inspector.");
-        }
         ChangeGold(0);
         ChangeHealth(0);
     }
@@ -64,7 +59,6 @@ public class gameControlScript : MonoBehaviour
         Debug.Log(roundPlaying);
     }
 
-    //wywo³uje umierajacy wrog
     public void ChangeGold(int value)
     {
         gold += value;
@@ -93,7 +87,6 @@ public class gameControlScript : MonoBehaviour
     }
     public void DebugControls()
     {
-        // Zmiana miejsca bazy
         //if (Input.GetKeyUp(KeyCode.Mouse0))
         //{
         //    Ray ray = camera.ScreenPointToRay(Input.mousePosition);
@@ -103,7 +96,6 @@ public class gameControlScript : MonoBehaviour
         //    }
         //}
 
-        // Spawnowanie wrogów
         if (Input.GetKeyUp(KeyCode.S))
         {
             roundPlaying = true;
@@ -115,7 +107,6 @@ public class gameControlScript : MonoBehaviour
             enemySpawner.SpawnWave();
         }
 
-        // Restart
         if (Input.GetKeyUp(KeyCode.R))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
@@ -124,7 +115,6 @@ public class gameControlScript : MonoBehaviour
     public void SelectTurret()
     {
         
-        // Rozpoczêcie stawiania ró¿nych typów wie¿
         
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
@@ -163,7 +153,6 @@ public class gameControlScript : MonoBehaviour
             
         }
         
-        // Rozpoczêcie stawiania barykady
         if (Input.GetKeyDown(KeyCode.Alpha5) && !roundPlaying)
         {
             if (pendingTower == null )
@@ -180,7 +169,6 @@ public class gameControlScript : MonoBehaviour
 
     public void StartPlacingTower(GameObject towerPrefab)
     {
-        // Tworzymy now¹ wie¿ê tylko jeœli ¿adna nie jest ju¿ ustawiana
         if (pendingTower == null)
         {
             pendingTower = Instantiate(towerPrefab);
@@ -191,13 +179,11 @@ public class gameControlScript : MonoBehaviour
     {
         if (pendingTower == null || gridManager == null) return;
 
-        // Raycast w celu okreœlenia pozycji myszy w œwiecie
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit raycastHit))
         {
             Vector2Int gridPosition = gridManager.GetGridCoordinates(raycastHit.point);
 
-            // Sprawdzanie, czy komórka jest dostêpna
             if (gridManager.IsCellAvailable(gridPosition.x, gridPosition.y) )
             {
                 Vector3 worldPosition = gridManager.GetWorldPosition(gridPosition.x, gridPosition.y);
@@ -235,14 +221,14 @@ public class gameControlScript : MonoBehaviour
             {
                 if (pendingTower.GetComponent<Tower>().towerType != TowerType.barricade)
                 {
-                    gridManager.PlaceTower(gridPosition.x, gridPosition.y); // Oznacz komórkê jako zajêt¹
+                    gridManager.PlaceTower(gridPosition.x, gridPosition.y);
                 }
-                pendingTower = null; // Koñczymy tryb ustawiania
+                pendingTower = null;
                 hudScript.cancelActiveTurret();
             }
             else
             {
-                Debug.LogWarning("Cannot place tower here.");
+                Debug.LogWarning("Nue mozesz tu postawic");
             }
         }
     }
